@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-
+import styles from './styles.module.scss';
 const CountdownTimmer = ({ targetDate }) => {
+    const { box, title } = styles;
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
     function calculateTimeLeft() {
         const difference = +new Date(targetDate) - +new Date();
         let timeLeft = {};
@@ -32,8 +32,9 @@ const CountdownTimmer = ({ targetDate }) => {
     Object.keys(timeLeft).forEach(interval => {
         if (timeLeft[interval] !== undefined) {
             timerComponents.push(
-                <span key={interval}>
-                    {formatNumber(timeLeft[interval])} {interval}{' '}
+                <span key={interval} className={box}>
+                    {formatNumber(timeLeft[interval])}{' '}
+                    <span className={title}>{interval}</span>{' '}
                 </span>
             );
         }
