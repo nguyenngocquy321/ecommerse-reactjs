@@ -1,52 +1,17 @@
 import Button from '@components/Button/Button';
 import styles from './styles.module.scss';
-import { useEffect, useRef, useState } from 'react';
-
+import useTranslateXImage from '@/hooks/useTranslateXImage';
 function SaleHomepage() {
     const { container, title, des, boxBtn, boxImage } = styles;
-    const [scrollDirection, setScrollDirection] = useState(null);
-    const [translateLeft, setTranslateLeft] = useState(-100);
-    const [translateRight, setTranslateRight] = useState(100);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const previousScrollPosition = useRef(0);
-
-    const scrollTracking = () => {
-        const currentScrollPosition = window.pageYOffset;
-        setScrollPosition(currentScrollPosition);
-
-        if (currentScrollPosition > previousScrollPosition.current) {
-            setScrollDirection('down');
-        } else if (currentScrollPosition < previousScrollPosition.current) {
-            setScrollDirection('up');
-        }
-
-        previousScrollPosition.current =
-            currentScrollPosition <= 0 ? 0 : currentScrollPosition;
-    };
-
-    useEffect(() => {
-        window.addEventListener('scroll', scrollTracking);
-        return () => window.removeEventListener('scroll', scrollTracking);
-    }, []);
-
-    useEffect(() => {
-        if (scrollDirection === 'down' && scrollPosition >= 1500) {
-            setTranslateLeft(prev => (prev >= 0 ? 0 : prev + 2));
-            setTranslateRight(prev => (prev <= 0 ? 0 : prev - 2));
-        } else if (scrollDirection === 'up') {
-            setTranslateLeft(prev => (prev <= -100 ? -100 : prev - 2));
-            setTranslateRight(prev => (prev >= 100 ? 100 : prev + 2));
-        }
-    }, [scrollPosition, scrollDirection]);
-
+    const { translateXPosition } = useTranslateXImage();
     return (
         <div className={container}>
             <div
                 className={boxImage}
                 style={{
                     width: '41%',
-                    transform: `translateX(${translateLeft}px)`,
-                    transition: 'transform 1s ease-out'
+                    transform: `translateX(-${translateXPosition}px)`,
+                    transition: 'transform 0.6s ease-out'
                 }}
             >
                 <img
@@ -70,8 +35,8 @@ function SaleHomepage() {
                 className={boxImage}
                 style={{
                     width: '41%',
-                    transform: `translateX(${translateRight}px)`,
-                    transition: 'transform 1s ease-out'
+                    transform: `translateX(${translateXPosition}px)`,
+                    transition: 'transform 0.6s ease-out'
                 }}
             >
                 <img
