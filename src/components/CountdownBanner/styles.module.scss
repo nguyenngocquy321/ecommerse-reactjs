@@ -17,5 +17,8 @@
 }
 .boxBtn {
     margin-top: 20px;
-    text-align: center;
+    @include flex_box_custom(center, center, 0px);
+    div {
+        width: 167px;
+    }
 }

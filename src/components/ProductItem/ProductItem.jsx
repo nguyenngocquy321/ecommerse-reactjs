@@ -12,21 +12,23 @@ function ProductItem({ src, prevSrc, name, price }) {
         priceCl
     } = styles;
     return (
-        <div className={boxImg}>
-            <img src={src} alt='' />
-            <img src={prevSrc} alt='' className={showImgWhenHover} />
-            <div className={showFncWhenHover}>
-                <div className={boxIcon}>
-                    <img src={cartIcon} alt='' />
-                </div>
-                <div className={boxIcon}>
-                    <img src={hearthIcon} alt='' />
-                </div>
-                <div className={boxIcon}>
-                    <img src={reloadIcon} alt='' />
-                </div>
-                <div className={boxIcon}>
-                    <img src={cartIcon} alt='' />
+        <div>
+            <div className={boxImg}>
+                <img src={src} alt='' />
+                <img src={prevSrc} alt='' className={showImgWhenHover} />
+                <div className={showFncWhenHover}>
+                    <div className={boxIcon}>
+                        <img src={cartIcon} alt='' />
+                    </div>
+                    <div className={boxIcon}>
+                        <img src={hearthIcon} alt='' />
+                    </div>
+                    <div className={boxIcon}>
+                        <img src={reloadIcon} alt='' />
+                    </div>
+                    <div className={boxIcon}>
+                        <img src={cartIcon} alt='' />
+                    </div>
                 </div>
             </div>
             <div className={title}>{name}</div>
