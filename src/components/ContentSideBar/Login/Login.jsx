@@ -8,16 +8,21 @@ import { useContext } from 'react';
 import { ToastContext } from '@/contexts/ToastProvider';
 import { register, signIn } from '@/apis/authService';
 import Cookies from 'js-cookie';
+import { SideBarContext } from '@/contexts/SideBarProvider';
+import { StoreContext } from '@/contexts/storeProvider';
+
 function Login() {
     const { container, title, boxRememberMe, lostPw } = styles;
     const [isRegister, setIsRegister] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useContext(ToastContext);
+    const { setIsOpen } = useContext(SideBarContext);
+    const { setUserId } = useContext(StoreContext);
+
     const formik = useFormik({
         initialValues: {
             email: '',
-            password: '',
-            cfmpassword: ''
+            password: ''
         },
         validationSchema: Yup.object({
             email: Yup.string()
@@ -31,11 +36,15 @@ function Login() {
                 'Passwords must match'
             )
         }),
+
         onSubmit: async values => {
-            const { email: username, password } = values;
             if (isLoading) return;
+
+            const { email: username, password } = values;
+
+            setIsLoading(true);
+
             if (isRegister) {
-                setIsLoading(true);
                 await register({ username, password })
                     .then(res => {
                         toast.success(res.data.message);
@@ -46,29 +55,36 @@ function Login() {
                         setIsLoading(false);
                     });
             }
+
             if (!isRegister) {
-                setIsLoading(true);
                 await signIn({ username, password })
                     .then(res => {
                         setIsLoading(false);
-                        const { id, token, refeshToken } = res.data;
+                        const { id, token, refreshToken } = res.data;
+                        setUserId(id);
                         Cookies.set('token', token);
-                        Cookies.set('refeshToken', refeshToken);
+                        Cookies.set('refreshToken', refreshToken);
                         Cookies.set('userId', id);
+                        toast.success('Sign in successfully!');
+                        setIsOpen(false);
                     })
                     .catch(err => {
                         setIsLoading(false);
+                        toast.error('Sign in failed!');
                     });
             }
         }
     });
+
     const handleToggle = () => {
         setIsRegister(!isRegister);
         formik.resetForm();
     };
+
     return (
         <div className={container}>
             <div className={title}>{isRegister ? 'SIGN UP' : 'SIGN IN'}</div>
+
             <form onSubmit={formik.handleSubmit}>
                 <InputCommon
                     id='email'
@@ -77,13 +93,15 @@ function Login() {
                     isRequired
                     formik={formik}
                 />
+
                 <InputCommon
                     id='password'
-                    label='password'
+                    label='Password'
                     type='password'
                     isRequired
                     formik={formik}
                 />
+
                 {isRegister && (
                     <InputCommon
                         id='cfmpassword'
@@ -93,10 +111,14 @@ function Login() {
                         formik={formik}
                     />
                 )}
-                <div className={boxRememberMe}>
-                    <input type='checkbox' />
-                    <span>Remember me</span>
-                </div>
+
+                {!isRegister && (
+                    <div className={boxRememberMe}>
+                        <input type='checkbox' />
+                        <span>Remember me</span>
+                    </div>
+                )}
+
                 <Button
                     content={
                         isLoading
@@ -107,18 +129,19 @@ function Login() {
                     }
                     type='submit'
                 />
-                <Button
-                    content={
-                        isRegister
-                            ? 'Already have an account'
-                            : 'Don`t have an account '
-                    }
-                    type='submit'
-                    isPrimary={false}
-                    style={{ marginTop: '10px' }}
-                    onClick={handleToggle}
-                />
             </form>
+
+            <Button
+                content={
+                    isRegister
+                        ? 'Already have an account?'
+                        : 'Don’t have an account?'
+                }
+                isPriamry={false}
+                style={{ marginTop: '10px' }}
+                onClick={handleToggle}
+            />
+
             {!isRegister && <div className={lostPw}>Lost your password?</div>}
         </div>
     );

@@ -27,7 +27,7 @@ function SaleHomepage() {
                     sodales.
                 </p>
                 <div className={boxBtn}>
-                    <Button content={'Read more'} isPrimary={false} />
+                    <Button content={'Read more'} isPriamry={false} />
                 </div>
             </div>
 
