@@ -3,9 +3,13 @@ import { dataBoxIcon, dataMenu } from './constants';
 import Menu from './Menu/Menu';
 import styles from './styles.module.scss';
 import Logo from '@icons/images/Logo-retina.png';
-import reLoadIcon from '@icons/svgs/reLoadIcon.svg';
-import hearthIcon from '@icons/svgs/hearthIcon.svg';
-import cartIcon from '@icons/svgs/cartIcon.svg';
+import useScrollHandling from '@/hooks/useScrollHandling';
+import { useContext, useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { SideBarContext } from '@/contexts/SideBarProvider';
+import { TfiReload } from 'react-icons/tfi';
+import { BsHeart } from 'react-icons/bs';
+import { PiShoppingCart } from 'react-icons/pi';
 
 function MyHeader() {
     const {
@@ -13,35 +17,55 @@ function MyHeader() {
         containerMenu,
         containerHeader,
         containerBox,
-        container
+        container,
+        fixedHeader,
+        topHeader
     } = styles;
+
+    const { scrollPosition } = useScrollHandling();
+    const [fixedPosition, setFixedPosition] = useState(false);
+
+    const { setIsOpen, setType } = useContext(SideBarContext);
+
+    const handleOpenSideBar = type => {
+        setType(type);
+        setIsOpen(true);
+    };
+
+    useEffect(() => {
+        setFixedPosition(scrollPosition > 80);
+    }, [scrollPosition]);
+
     return (
-        <div className={container}>
+        <div
+            className={classNames(container, topHeader, {
+                [fixedHeader]: fixedPosition
+            })}
+        >
             <div className={containerHeader}>
+                {/* Left side */}
                 <div className={containerBox}>
                     <div className={containerBoxIcon}>
-                        {dataBoxIcon.map((item, index) => {
-                            return (
-                                <BoxIcon
-                                    key={index}
-                                    type={item.type}
-                                    href={item.href}
-                                />
-                            );
-                        })}
+                        {dataBoxIcon.map((item, index) => (
+                            <BoxIcon
+                                key={index}
+                                type={item.type}
+                                href={item.href}
+                            />
+                        ))}
                     </div>
                     <div className={containerMenu}>
-                        {dataMenu.slice(0, 3).map((item, index) => {
-                            return (
-                                <Menu
-                                    content={item.content}
-                                    href={item.href}
-                                    key={index}
-                                />
-                            );
-                        })}
+                        {dataMenu.slice(0, 3).map((item, index) => (
+                            <Menu
+                                key={index}
+                                content={item.content}
+                                href={item.href}
+                            />
+                        ))}
                     </div>
                 </div>
+
+                {/* Logo center */}
                 <div>
                     <img
                         src={Logo}
@@ -52,38 +76,30 @@ function MyHeader() {
                         }}
                     />
                 </div>
+
+                {/* Right side */}
                 <div className={containerBox}>
                     <div className={containerMenu}>
-                        {dataMenu
-                            .slice(3, dataMenu.length)
-                            .map((item, index) => {
-                                return (
-                                    <Menu
-                                        content={item.content}
-                                        href={item.href}
-                                        key={index}
-                                    />
-                                );
-                            })}
+                        {dataMenu.slice(3).map((item, index) => (
+                            <Menu
+                                key={index}
+                                content={item.content}
+                                href={item.href}
+                            />
+                        ))}
                     </div>
                     <div className={containerBoxIcon}>
-                        <img
-                            width={26}
-                            height={26}
-                            src={reLoadIcon}
-                            alt='reLoadIcon'
+                        <TfiReload
+                            style={{ fontSize: '20px', cursor: 'pointer' }}
+                            onClick={() => handleOpenSideBar('compare')}
                         />
-                        <img
-                            width={26}
-                            height={26}
-                            src={hearthIcon}
-                            alt='hearthIcon'
+                        <BsHeart
+                            style={{ fontSize: '20px', cursor: 'pointer' }}
+                            onClick={() => handleOpenSideBar('wishlist')}
                         />
-                        <img
-                            width={26}
-                            height={26}
-                            src={cartIcon}
-                            alt='cartIcon'
+                        <PiShoppingCart
+                            style={{ fontSize: '25px', cursor: 'pointer' }}
+                            onClick={() => handleOpenSideBar('cart')}
                         />
                     </div>
                 </div>

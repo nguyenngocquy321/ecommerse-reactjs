@@ -2,10 +2,12 @@
 @import '@styles/variables.module.scss';
 .container {
     @include flex_box_custom(center, center, 0px);
-    position: absolute;
-    top: 0;
     left: 0;
     right: 0;
+}
+.topHeader {
+    position: absolute;
+    top: 0;
 }
 .containerHeader {
     width: 1250px;
@@ -15,7 +17,7 @@
     height: 83px;
 }
 .containerBoxIcon {
-    @include flex_box_custom(center, center, 10px);
+    @include flex_box_custom(center, center, 20px);
 }
 .containerMenu {
     @include flex_box_custom(center, center, 30px);
@@ -51,4 +53,12 @@
 .menu:hover::after {
     transform: scale(1);
     opacity: 1;
+}
+.fixedHeader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    z-index: 999;
 }
