@@ -25,3 +25,51 @@
     background-size: cover;
     margin-top: 10px;
 }
+.contentBox {
+    @include flex_box_custom(space-between, center, 30px);
+    flex-direction: column;
+    padding: 60px 0;
+    .countDownBox {
+        @include flex_box_custom(center, center, 10px);
+    }
+    .countDownBox span {
+        margin-top: 0px;
+        border: 1px solid #e1e1e1;
+    }
+    .title {
+        font-size: 28px;
+        color: $four_color;
+    }
+    .boxBtn {
+        width: 160px;
+    }
+}
+.containerFilter {
+    @include flex_box_custom(space-between, center, 0px);
+    margin-top: 15px;
+    .boxLeft {
+        @include flex_box_custom(center, center, 20px);
+    }
+    .boxIcon {
+        @include flex_box_custom(center, center, 10px);
+    }
+    .selectBox {
+        border: 1px solid #e1e1e1;
+        padding: 5px;
+        color: $seconddary_color;
+    }
+    .selectBox.sort {
+        width: 275px;
+    }
+    .selectBox.show {
+        width: 83px;
+    }
+}
+.containerProduct {
+    @include flex_box_custom(center, flex-start, 10px);
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.sectionListProduct {
+    min-height: 800px;
+}
