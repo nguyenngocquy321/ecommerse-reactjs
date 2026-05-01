@@ -1,22 +1,63 @@
+import { deleteCart, getCart } from '../../../../apis/carthService';
 import styles from './styles.module.scss';
 import { IoCloseOutline } from 'react-icons/io5';
-function ItemProduct() {
-    const { container, boxContent, boxClose, title, price, size } = styles;
+import { useContext, useState } from 'react';
+import { SideBarContext } from '../../../../contexts/SideBarProvider';
+import LoadingTextCommon from '@components/LoadingTextCommon/LoadingTextCommon';
+import { ToastContext } from '@contexts/ToastProvider';
+function ItemProduct({
+    src,
+    nameProduct,
+    priceProduct,
+    skuProduct,
+    sizeProduct,
+    quantity,
+    productId,
+    userId,
+}) {
+    const {
+        container,
+        boxContent,
+        boxClose,
+        title,
+        price,
+        size,
+        overlayLoading,
+    } = styles;
+    const [isDelete, setDelete] = useState(false);
+    const { handleGetListProductCart } = useContext(SideBarContext);
+    const { toast } = useContext(ToastContext);
+    const handleRemoveItem = () => {
+        setDelete(true);
+        deleteCart({ productId, userId })
+            .then(res => {
+                setDelete(false);
+                toast.success('Remove product successfully');
+                handleGetListProductCart(userId, 'cart');
+            })
+            .catch(err => {
+                setDelete(false);
+            });
+    };
     return (
         <div className={container}>
-            <img
-                src='https://xstore.8theme.com/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-1.1-min.jpg'
-                alt=''
-            />
-            <div className={boxClose}>
+            <img src={src} alt='' />
+            <div className={boxClose} onClick={handleRemoveItem}>
                 <IoCloseOutline style={{ fontSize: '25px', color: 'c1c1c1' }} />
             </div>
             <div className={boxContent}>
-                <div className={title}>title of product</div>
-                <div className={size}>Size:M</div>
-                <div className={price}>$119.99</div>
-                <div className={price}>$119.99</div>
+                <div className={title}>{nameProduct}</div>
+                <div className={size}>Size:{sizeProduct}</div>
+                <div className={price}>
+                    {quantity} x ${priceProduct}
+                </div>
+                <div className={price}>SKU:${skuProduct}</div>
             </div>
+            {isDelete && (
+                <div className={overlayLoading}>
+                    <LoadingTextCommon />
+                </div>
+            )}
         </div>
     );
 }

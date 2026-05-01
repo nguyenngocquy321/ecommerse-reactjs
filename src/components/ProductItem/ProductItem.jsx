@@ -6,6 +6,11 @@ import reloadIcon from '@icons/svgs/reloadIcon.svg';
 import cls from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { OurShopContext } from '@contexts/OurShopProvider';
+import Cookies from 'js-cookie';
+import { SideBarContext } from '../../contexts/SideBarProvider';
+import { ToastContext } from '../../contexts/ToastProvider';
+import { addProductsToCart } from '../../apis/carthService';
+import LoadingTextCommon from '@components/LoadingTextCommon/LoadingTextCommon';
 function ProductItem({
     src,
     prevSrc,
@@ -36,11 +41,47 @@ function ProductItem({
     const [sizeChoose, setSizeChoose] = useState('');
     const ourShopStore = useContext(OurShopContext);
     const [isShowGrid, setIsShowGrid] = useState(ourShopStore?.isShowGrid);
+    const [isLoading, setIsLoading] = useState(false);
+    const userId = Cookies.get('userId');
+    const { setIsOpen, setType, handleGetListProductsCart } =
+        useContext(SideBarContext);
+    const { toast } = useContext(ToastContext);
     const handleChooseSize = size => {
         setSizeChoose(size);
     };
     const handleClearSize = () => {
         setSizeChoose('');
+    };
+    const handleAddCart = () => {
+        if (!userId) {
+            setIsOpen(true);
+            setType('login');
+            toast.warning('Please login to add product to cart');
+            return;
+        }
+        if (!sizeChoose) {
+            toast.warning('Plase choose size');
+            return;
+        }
+        const data = {
+            userId: userId,
+            productId: details?._id,
+            quantity: 1,
+            size: sizeChoose,
+        };
+        setIsLoading(true);
+        addProductsToCart(data)
+            .then(res => {
+                setType('cart');
+                toast.success('Add Product to cart successfully');
+                setIsLoading(false);
+                handleGetListProductsCart(userId, 'cart');
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error('Add Product to cart failed');
+                setIsLoading(false);
+            });
     };
     useEffect(() => {
         if (isHomePage === true) {
@@ -114,7 +155,16 @@ function ProductItem({
                 </div>
                 {!isHomePage && (
                     <div className={cls(boxBtn, { [leftBtn]: !isHomePage })}>
-                        <Button content={'ADD TO CART'} />
+                        <Button
+                            content={
+                                isLoading ? (
+                                    <LoadingTextCommon />
+                                ) : (
+                                    'ADD TO CART'
+                                )
+                            }
+                            onClick={handleAddCart}
+                        />
                     </div>
                 )}
             </div>

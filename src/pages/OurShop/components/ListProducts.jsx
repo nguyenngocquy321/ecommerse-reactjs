@@ -5,6 +5,7 @@ import ProductItem from '@components/ProductItem/ProductItem';
 import styles from '../styles.module.scss';
 import Button from '@components/Button/Button';
 import { AiOutlineReload } from 'react-icons/ai';
+import LoadingTextCommon from '@components/LoadingTextCommon/LoadingTextCommon';
 function ListProducts() {
     const { containerProduct, sectionListProduct } = styles;
     const {
@@ -45,7 +46,7 @@ function ListProducts() {
                                 <Button
                                     content={
                                         isLoadMore ? (
-                                            <AiOutlineReload className='{styles.rotateIcon}' />
+                                            <LoadingTextCommon />
                                         ) : (
                                             'LOAD MORE PRODUCT'
                                         )

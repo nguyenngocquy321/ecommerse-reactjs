@@ -13,7 +13,7 @@ function Button({
             className={classNames(btn, {
                 [primaryBtn]: isPriamry,
                 [secondaryBtn]: !isPriamry,
-                [customClassname]: customClassname
+                [customClassname]: customClassname,
             })}
             {...props}
         >

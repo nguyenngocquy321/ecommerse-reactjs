@@ -16,13 +16,13 @@ function Login() {
     const [isRegister, setIsRegister] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useContext(ToastContext);
-    const { setIsOpen } = useContext(SideBarContext);
+    const { setIsOpen, handleGetListProductsCart } = useContext(SideBarContext);
     const { setUserId } = useContext(StoreContext);
 
     const formik = useFormik({
         initialValues: {
             email: '',
-            password: ''
+            password: '',
         },
         validationSchema: Yup.object({
             email: Yup.string()
@@ -34,7 +34,7 @@ function Login() {
             cfmpassword: Yup.string().oneOf(
                 [Yup.ref('password'), null],
                 'Passwords must match'
-            )
+            ),
         }),
 
         onSubmit: async values => {
@@ -67,13 +67,14 @@ function Login() {
                         Cookies.set('userId', id);
                         toast.success('Sign in successfully!');
                         setIsOpen(false);
+                        handleGetListProductsCart(id, 'cart');
                     })
                     .catch(err => {
                         setIsLoading(false);
                         toast.error('Sign in failed!');
                     });
             }
-        }
+        },
     });
 
     const handleToggle = () => {
@@ -124,8 +125,8 @@ function Login() {
                         isLoading
                             ? 'LOADING...'
                             : isRegister
-                            ? 'REGISTER'
-                            : 'LOGIN'
+                              ? 'REGISTER'
+                              : 'LOGIN'
                     }
                     type='submit'
                 />

@@ -36,7 +36,7 @@ function SideBar() {
             {/* overlay mờ khi sidebar mở */}
             <div
                 className={classNames({
-                    [overlay]: isOpen
+                    [overlay]: isOpen,
                 })}
                 onClick={handleToggle}
             ></div>
@@ -44,7 +44,7 @@ function SideBar() {
             {/* nội dung sidebar */}
             <div
                 className={classNames(sideBar, {
-                    [slideSideBar]: isOpen
+                    [slideSideBar]: isOpen,
                 })}
             >
                 {handleRenderContent()}
